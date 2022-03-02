@@ -1,0 +1,10 @@
+build
+build-stamp-l10n
+
+.vscode/
+
+*.js
+
+*.pyc
+__pycache__
+__init__.py

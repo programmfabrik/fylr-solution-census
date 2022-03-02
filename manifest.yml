@@ -1,0 +1,22 @@
+plugin:
+  name: set_image_name
+  version: 1
+  displayname:
+    de-DE: "Plugin: Automatisierung beim Image Upload"
+    en-US: "Plugin: Automatization for Image Upload"
+
+
+# callback registration in fylr
+callbacks:
+  db_pre_save:
+    exec:
+      service: python3
+      commands:
+        - prog: python3
+          stdin:
+            type: body
+          stdout:
+            type: body
+          args:
+            - type: value
+              value: src/server/set_image_name.py

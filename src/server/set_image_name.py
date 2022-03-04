@@ -2,7 +2,7 @@
 
 
 import sys
-
+import time
 import util
 import json
 
@@ -10,8 +10,6 @@ OBJECTTYPE = 'cs_image'
 NAME_FIELD = 'name'
 
 PLUGIN_REF = 'census.core.set_image_name'
-
-
 NAME_PREFIX = 'HU'
 
 
@@ -29,8 +27,6 @@ def main():
     # get a session token
     access_token = util.get_json_value(
         orig_data, 'info.api_user_access_token')
-    # # xxx
-    # access_token= 'Xkq_tiukcdy_4zJzo4EipNKatPGPpe17estLEMdLJQk.HCpv3YtUWdMRfdlXn4a-Oi7_I2ny-akSw9uenMaLHKY'
     if access_token is None:
         util.return_error_response('info.api_user_access_token missing!')
 
@@ -72,21 +68,41 @@ def main():
         # no updates in objects necessary, just return the original data
         util.return_response(orig_data)
 
-    # if any names need to be update, get the next offset in the sequence
+    # repeat:
+    # 1:    get the next number of the sequence (from an existing object, or 1 if the sequence has not been used yet)
+    # 2:    determine the new maximum number of the sequence (depending on how many objects need an update)
+    # 3:    try to update the sequence object (protected by object version)
+    # 4:    if the sequence was updated, update and return the objects, break loop
+
     seq = util.FylrSequence(api_url, PLUGIN_REF, access_token)
-    offset = seq.get_next_number()
 
-    util.write_tmp_file('set_image_name.log', [
-        'offset: ' + str(offset)
-    ], new_file=True)
+    do_repeat = True
+    repeated = 0
+    while do_repeat:
+        do_repeat = False
 
-    # update the new sequence to check if it has not been changed by another instance, else xxxrepeatxxx
-    update_objects = False
-    # todo
+        offset = seq.get_next_number()
 
-    # todo if the new sequence was updated, update the actual objects
+        # update the new sequence to check if it has not been changed by another instance
+        update_ok, error = seq.update(offset + len(indices_to_update))
 
-    if update_objects:
+        if error is not None:
+            # indicator that something went wrong and the plugin should just return an error message
+            util.return_error_response(util.dumpjs({
+                'error': 'could not update sequence',
+                'reason': error
+            }))
+
+        if not update_ok:
+            # sleep for 1 second and try again to get and update the sequence
+            time.sleep(1)
+
+            do_repeat = True
+            repeated += 1
+
+            continue
+
+        # sequence was updated, unique sequence values can be used to update objects
         data = []
         for i in range(len(objects)):
             obj = objects[i]
@@ -111,6 +127,8 @@ def main():
             obj[OBJECTTYPE][NAME_FIELD] = name
 
             data.append(obj)
+
+        # everything ok, update and return the objects, exit program
 
         response = orig_data
         response['objects'] = data

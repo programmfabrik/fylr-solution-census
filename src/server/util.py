@@ -34,10 +34,8 @@ def handle_exceptions(func):
 
             trace = [str(repr(e))] + traceback.format_list(full_tb) + exc_line
 
-            write_tmp_file(
-                'set_image_name_exception.log',
-                trace,
-                new_file=True)
+            return_error_response('\n'.join(trace))
+
     return func_wrapper
 
 
@@ -85,37 +83,31 @@ def return_error_response(error):
 
 def fylr_api_headers(access_token):
     return {
-        'authorization': 'Bearer: ' + access_token,
+        'authorization': 'Bearer ' + access_token,
     }
 
 
-@handle_exceptions
 def get_from_api(api_url, path, access_token):
     resp = requests.get(
         api_url + '/' + path,
         headers=fylr_api_headers(access_token))
 
-    return resp.text, resp.status_code, resp.url
+    return resp.text, resp.status_code
 
 
-@handle_exceptions
 def post_to_api(api_url, path, access_token, payload=None):
     resp = requests.post(
         api_url + '/' + path,
         headers=fylr_api_headers(access_token),
         data=payload)
 
-    return resp.text, resp.status_code, resp.url
-
-
-# class to handle a sequence using specific objects
+    return resp.text, resp.status_code
 
 
 class FylrSequence(object):
-
     OT_SEQ = 'sequence'
     OT_SEQ_REF = 'reference'
-    OT_SEQ_OFFSET = 'offset'
+    OT_SEQ_NUM = 'number'
 
     current_number = 1
     obj_id = None
@@ -137,9 +129,9 @@ class FylrSequence(object):
         return post_to_api(self.api_url, path, self.access_token, payload)
 
     @handle_exceptions
-    def get_next_number(self):
+    def get_next_number(self) -> int:
         path = 'db/' + self.OT_SEQ + '/_all_fields/list'
-        api_resp, statuscode, used_url = self.get_from_api(path)
+        api_resp, statuscode = self.get_from_api(path)
 
         if statuscode != 200:
             raise Exception('invalid response: ' +
@@ -156,43 +148,69 @@ class FylrSequence(object):
             if get_json_value(obj, self.OT_SEQ + '.' + self.OT_SEQ_REF) != self.ref:
                 continue
 
+            # get the last used number of the sequence
             n = get_json_value(
-                obj, self.OT_SEQ + '.' + self.OT_SEQ_OFFSET)
-            if n is None:
-                n = 0
-            if n < 0:
-                n = 0
+                obj, self.OT_SEQ + '.' + self.OT_SEQ_NUM)
+            if n is None or n < 1:
+                n = 1
 
-            # update offset and object id
+            # update offset, object id and version
             self.current_number = n
-
             self.obj_id = get_json_value(obj, self.OT_SEQ + '._id')
             self.version = get_json_value(obj, self.OT_SEQ + '._version')
 
             break
 
-        return self.current_number + 1
+        # return the next free number of the sequence
+        return self.current_number
 
     @handle_exceptions
-    def update(self, new_number):
+    def update(self, new_number: int):
+
         if new_number <= self.current_number:
-            return False
+            return False, None
 
         new_obj = {
             '_objecttype': self.OT_SEQ,
             '_mask': '_all_fields',
             self.OT_SEQ: {
                 '_id': self.obj_id,
-                '_version': self.version + 1,
-                self.OT_SEQ_OFFSET: new_number,
+                '_version': 1 if self.obj_id is None else self.version + 1,
+                self.OT_SEQ_NUM: new_number,
                 self.OT_SEQ_REF: self.ref
             }
         }
 
         resp, statuscode = post_to_api(
-            self.api_url, 'db/' + self.OT_SEQ,
+            self.api_url,
+            'db/' + self.OT_SEQ,
             self.access_token,
             dumpjs([new_obj])
         )
 
-        return statuscode == 200
+        # determine if the caller should try to repeate a failed update or give up
+
+        if statuscode == 200:
+            # everything ok
+            self.version += 1
+            return True, None
+
+        elif statuscode >= 400 and statuscode < 500:
+            # some api error, maybe wrong version
+            # => caller should repeat the process, and get the new current sequence number
+            return False, None
+
+        else:
+            # something went wrong, caller should not try to repeat updating the sequence
+            error = {
+                'url': self.api_url + '/db/' + self.OT_SEQ,
+                'statuscode': statuscode,
+            }
+            error_resp = None
+            try:
+                error_resp = json.loads(resp)
+            except:
+                error_resp = resp
+            error['response'] = error_resp
+
+            return False, error

@@ -3,7 +3,8 @@
 
 import sys
 import time
-import util
+import fylr_lib_plugin_python3.util as util
+import fylr_lib_plugin_python3.sequence as sequence
 import json
 
 OBJECTTYPE = 'cs_image'
@@ -29,6 +30,25 @@ def main():
         orig_data, 'info.api_user_access_token')
     if access_token is None:
         util.return_error_response('info.api_user_access_token missing!')
+
+    # load base config for this plugin
+
+    config_path = 'info.config.system.census\.core\.set_image_name\.sequence.'
+    sequence_objecttype = util.get_json_value(
+        orig_data, config_path + 'objecttype')
+    if sequence_objecttype is None:
+        util.return_error_response(
+            'no sequence objecttype is defined in the base config')
+    sequence_ref_field = util.get_json_value(
+        orig_data, config_path + 'ref_field')
+    if sequence_ref_field is None:
+        util.return_error_response(
+            'no sequence reference field is defined in the base config')
+    sequence_num_field = util.get_json_value(
+        orig_data, config_path + 'num_field')
+    if sequence_num_field is None:
+        util.return_error_response(
+            'no sequence number field is defined in the base config')
 
     # iterate over objects and check if the name must be set
     objects = util.get_json_value(orig_data, 'objects')
@@ -74,7 +94,13 @@ def main():
     # 3:    try to update the sequence object (protected by object version)
     # 4:    if the sequence was updated, update and return the objects, break loop
 
-    seq = util.FylrSequence(api_url, PLUGIN_REF, access_token)
+    seq = sequence.FylrSequence(
+        api_url,
+        PLUGIN_REF,
+        access_token,
+        sequence_objecttype,
+        sequence_ref_field,
+        sequence_num_field)
 
     do_repeat = True
     repeated = 0

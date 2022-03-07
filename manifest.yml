@@ -4,6 +4,9 @@ plugin:
   displayname:
     de-DE: "Plugin: Automatisierung beim Image Upload"
     en-US: "Plugin: Automatization for Image Upload"
+  webfrontend:
+    url: set_image_name.js
+    l10n: l10n/
 
 
 # callback registration in fylr
@@ -20,3 +23,19 @@ callbacks:
           args:
             - type: value
               value: src/server/set_image_name.py
+
+base_config:
+  - name: census.core.set_image_name.sequence
+    parameters:
+      objecttype:
+        type: text
+        plugin_type: "objecttype"
+        position: 0
+      ref_field:
+        type: text
+        plugin_type: "ref_field"
+        position: 1
+      num_field:
+        type: text
+        plugin_type: "num_field"
+        position: 2

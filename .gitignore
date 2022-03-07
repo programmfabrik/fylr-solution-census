@@ -8,3 +8,5 @@ build-stamp-l10n
 *.pyc
 __pycache__
 __init__.py
+
+build-info.json

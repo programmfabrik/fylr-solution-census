@@ -67,6 +67,7 @@ def main():
         objecttype = util.get_json_value(obj, '_objecttype')
         if objecttype != OBJECTTYPE:
             # another objecttype was inserted, nothing to do here
+            # (this should not be necessary anymore after the objecttype filter was introduced in fylr)
             continue
 
         # skip if not INSERT
@@ -100,7 +101,8 @@ def main():
         access_token,
         sequence_objecttype,
         sequence_ref_field,
-        sequence_num_field)
+        sequence_num_field,
+        log_in_tmp_file=True)
 
     do_repeat = True
     repeated = 0

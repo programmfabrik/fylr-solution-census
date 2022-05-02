@@ -1,0 +1,43 @@
+name: Release Plugin
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  coffescript_version: 1.12.7
+  plugin_name: set_image_name
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: "github.com/programmfabrik/*"
+      FYLR_BOT_ACCESS_TOKEN: ${{ secrets.FYLR_BOT_PERSONAL_ACCESS_TOKEN }}
+    steps:
+      - name: Install coffeescript
+        run: npm install coffee-script@${{ env.coffescript_version}}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Fetch all tags
+        run: git fetch --force --tags
+
+      - name: Compile coffee script files
+        uses: actions/coffeescript@v1
+
+      - name: Create the zip folder
+        run: make zip
+
+      - name: Release the plugin
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            ${{ env.plugin_name }}.zip
+          token: ${{ github.token }}
+          generate_release_notes: true

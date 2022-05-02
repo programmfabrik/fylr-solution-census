@@ -1,4 +1,4 @@
-PLUGIN_NAME = set_image_name
+PLUGIN_NAME ?= set_image_name
 
 L10N_FILES = l10n/$(PLUGIN_NAME).csv
 L10N_GOOGLE_KEY = 1_SRL--Xf9bAX87amqKbJP-AiZixA5tzt-lVnVXDP_50
@@ -29,3 +29,6 @@ clean: clean-base
 	rm -f src/server/*.pyc
 
 wipe: wipe-base
+
+zip:
+	zip -r $(PLUGIN_NAME).zip ./build ./build-info.json ./src/server ./l10n ./easydb-library

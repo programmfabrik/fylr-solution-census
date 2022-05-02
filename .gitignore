@@ -10,3 +10,5 @@ __pycache__
 __init__.py
 
 build-info.json
+
+*.zip

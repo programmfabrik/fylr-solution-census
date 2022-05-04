@@ -1,4 +1,4 @@
-PLUGIN_NAME = set_image_name
+PLUGIN_NAME = census-solution
 
 L10N_FILES = l10n/$(PLUGIN_NAME).csv
 L10N_GOOGLE_KEY = 1_SRL--Xf9bAX87amqKbJP-AiZixA5tzt-lVnVXDP_50

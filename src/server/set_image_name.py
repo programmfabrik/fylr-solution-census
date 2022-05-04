@@ -10,7 +10,7 @@ import json
 OBJECTTYPE = 'cs_image'
 NAME_FIELD = 'name'
 
-PLUGIN_NAME = 'census-solution'
+PLUGIN_NAME = 'solution-census'
 PLUGIN_REF = 'census.core.' + PLUGIN_NAME
 NAME_PREFIX = 'HU'
 

@@ -10,7 +10,8 @@ import json
 OBJECTTYPE = 'cs_image'
 NAME_FIELD = 'name'
 
-PLUGIN_REF = 'census.core.set_image_name'
+PLUGIN_NAME = 'solution-census'
+PLUGIN_REF = 'census.core.' + PLUGIN_NAME
 NAME_PREFIX = 'HU'
 
 
@@ -33,7 +34,7 @@ def main():
 
     # load base config for this plugin
 
-    config_path = 'info.config.plugin.set_image_name.config.census\.core\.set_image_name\.sequence.'
+    config_path = 'info.config.plugin.' + PLUGIN_NAME + '.config.census\.core\.' + PLUGIN_NAME + '\.set_image_name\.sequence.'
     sequence_objecttype = util.get_json_value(
         orig_data, config_path + 'objecttype')
     if sequence_objecttype is None:

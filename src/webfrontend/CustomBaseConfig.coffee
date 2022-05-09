@@ -9,7 +9,7 @@ class CustomBaseConfigCore extends BaseConfigPlugin
         switch def.plugin_type
             when "objecttype"
                 field = new ez5.ObjecttypeSelector
-                    form: label: $$("server.config.name.system.census.core.set_image_name.objecttype.label")
+                    form: label: $$("server.config.name.system.census.core.solution-census.set_image_name.objecttype.label")
                     name: fieldName
                     show_name: true
                     store_value: "fullname"
@@ -30,7 +30,7 @@ class CustomBaseConfigCore extends BaseConfigPlugin
 
             when "ref_field"
                 field = new ez5.FieldSelector
-                    form: label: $$("server.config.name.system.census.core.set_image_name.ref_field.label")
+                    form: label: $$("server.config.name.system.census.core.solution-census.set_image_name.ref_field.label")
                     name: fieldName
                     objecttype_data_key: "objecttype"
                     store_value: "fullname"
@@ -45,7 +45,7 @@ class CustomBaseConfigCore extends BaseConfigPlugin
 
             when "num_field"
                 field = new ez5.FieldSelector
-                    form: label: $$("server.config.name.system.census.core.set_image_name.num_field.label")
+                    form: label: $$("server.config.name.system.census.core.solution-census.set_image_name.num_field.label")
                     name: fieldName
                     objecttype_data_key: "objecttype"
                     store_value: "fullname"

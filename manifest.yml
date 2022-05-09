@@ -1,11 +1,11 @@
 plugin:
-  name: set_image_name
+  name: solution-census
   version: 1
   displayname:
     de-DE: "Plugin: Automatisierung beim Image Upload"
     en-US: "Plugin: Automatization for Image Upload"
   webfrontend:
-    url: set_image_name.js
+    url: solution-census.js
     l10n: l10n/
 
 
@@ -36,7 +36,7 @@ callbacks:
                   value: "%_exec.pluginDir%/src/server/set_image_name.py"
 
 base_config:
-  - name: census.core.set_image_name.sequence
+  - name: census.core.solution-census.set_image_name.sequence
     parameters:
       objecttype:
         type: text

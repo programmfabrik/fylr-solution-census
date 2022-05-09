@@ -1,4 +1,5 @@
-PLUGIN_NAME = solution-census
+PLUGIN_NAME ?= solution-census
+REPO_NAME ?= easydb-solution-census-plugin
 
 L10N_FILES = l10n/$(PLUGIN_NAME).csv
 L10N_GOOGLE_KEY = 1_SRL--Xf9bAX87amqKbJP-AiZixA5tzt-lVnVXDP_50
@@ -26,9 +27,17 @@ build: code $(L10N) buildinfojson
 code: $(JS)
 
 clean: clean-base
-	rm -f src/server/*.pyc
+	rm -rf src/server/*.pyc $(REPO_NAME)
 
 wipe: wipe-base
 
-zip:
-	zip -r $(PLUGIN_NAME).zip ./build ./build-info.json ./src/server ./l10n ./easydb-library
+zip: build
+	mkdir -p $(REPO_NAME)/src
+	cp -r build $(REPO_NAME)/
+	cp -r build-info.json $(REPO_NAME)/
+	cp -r src/server $(REPO_NAME)/src/
+	cp -r l10n $(REPO_NAME)/
+	cp -r easydb-library $(REPO_NAME)/
+	cp -r manifest.yml $(REPO_NAME)/
+	zip -r $(PLUGIN_NAME).zip $(REPO_NAME)
+	make clean

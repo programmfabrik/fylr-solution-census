@@ -1,4 +1,4 @@
-# fylr-solution-census-plugin
+# fylr-solution-census
 
 fylr plugin for the `census` solution
 ## related tickets:

@@ -1,11 +1,4 @@
 key,de-DE,en-US
-server.config.name.system.census.core.solution-census.set_image_name.sequence,Einstellungen für Objekttyp zum Speichern der fortlaufenden Nummern (Sequence),Settings for the objecttype to store sequential numbers
-server.config.name.system.census.core.solution-census.set_image_name.objecttype.label,Objekttyp,Objecttype
-server.config.name.system.census.core.solution-census.set_image_name.objecttype.label|hint,,
-server.config.name.system.census.core.solution-census.set_image_name.ref_field.label,Referenzfeld,Reference Field
-server.config.name.system.census.core.solution-census.set_image_name.ref_field.label|hint,,
-server.config.name.system.census.core.solution-census.set_image_name.num_field.label,Nummernfeld,Number Field
-server.config.name.system.census.core.solution-census.set_image_name.num_field.label|hint,,
 admin.mask.form.show_system_object_id_inline,Text-Ansicht: CensusID anzeigen,Text view: Show CensusID
 base.system_object_id_column.name,CensusID,CensusID
 admin.mask.col.show_system_object_id_inline,CensusID anzeigen,Show CensusID

@@ -5,3 +5,5 @@ plugin:
     de-DE: "Solution CENSUS"
     en-US: "Solution CENSUS"
   l10n: l10n/fylr-solution-census.csv
+
+base_url_prefix: "webfrontend"

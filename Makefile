@@ -23,7 +23,7 @@ all: google-csv build ## pull CSV & build
 build: clean code ## build all (creates build folder)
 	mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)
 	cp manifest.master.yml $(BUILD_DIR)/$(PLUGIN_NAME)/manifest.yml
-	#cp -r src/server l10n $(BUILD_DIR)/$(PLUGIN_NAME)
+	cp -r l10n $(BUILD_DIR)/$(PLUGIN_NAME)
 	#mkdir -p $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 	#cp -r $(JS) $(BUILD_DIR)/$(PLUGIN_NAME)/webfrontend
 

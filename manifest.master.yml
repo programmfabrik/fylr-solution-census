@@ -1,9 +1,7 @@
 plugin:
-  name: fylr-solution-census-plugin
+  name: fylr-solution-census
   version: 1
   displayname:
-    de-DE: "solution-census"
-    en-US: "solution-census"
-  webfrontend:
-    url: solution-census.js
-    l10n: l10n/
+    de-DE: "Solution CENSUS"
+    en-US: "Solution CENSUS"
+  l10n: l10n/fylr-solution-census.csv

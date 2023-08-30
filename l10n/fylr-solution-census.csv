@@ -61,3 +61,4 @@ result.object.card.objecttype.state_type,%(objecttype)s CensusID,%(objecttype)s 
 result.object.card.objecttype.uncertainty,%(objecttype)s CensusID,%(objecttype)s CensusID
 result.object.card.objecttype.cs_url_title,%(objecttype)s CensusID,%(objecttype)s CensusID
 result.object.card.objecttype.verbatim_dates,%(objecttype)s CensusID,%(objecttype)s CensusID
+search.input.button.expert|text,Erweiterte Suche,Advanced Search

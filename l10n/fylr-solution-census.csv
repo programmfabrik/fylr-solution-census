@@ -62,4 +62,6 @@ result.object.card.objecttype.uncertainty,%(objecttype)s CensusID,%(objecttype)s
 result.object.card.objecttype.cs_url_title,%(objecttype)s CensusID,%(objecttype)s CensusID
 result.object.card.objecttype.verbatim_dates,%(objecttype)s CensusID,%(objecttype)s CensusID
 search.input.button.expert|text,Erweiterte Suche,Advanced Search
-search.type.selector.button|text,Wählen Sie einen Bestand für die Suche aus.,Choose a Data Set to Search
+search.type.selector.button|text,Wählen Sie einen Bestand,Choose a Data Set
+detail.sidebar.hierarchy.button|text,Hierarchie,Hierarchy
+result.object.show_in_search|text,Zeige Verknüpfungen,Show Relationships
